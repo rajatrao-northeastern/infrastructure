@@ -65,6 +65,15 @@ Parameters:
     Description: Environment Name
     Type: String
     Default: dev
+  HostedZoneName:
+    Description: The Route53 hosted zone.
+    Type: String
+    Default: rajatrao.me.
+  Subdomain:
+    Description: The Route53 hosted zone subdomain.
+    Type: String
+    Default: demo
+
 Resources:
   myVPC:
     Type: AWS::EC2::VPC
@@ -307,6 +316,7 @@ Resources:
             sudo systemctl enable myapp
             sudo systemctl start myapp
             sudo pm2 reload all --update-env
+            sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 3000
       Tags:
         - Key: EC2
           Value: ApplicationServer
@@ -397,3 +407,15 @@ Resources:
       Path: "/"
       Roles:
       - !Ref WebAppS3IAMRole
+
+  DNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      # HostedZoneName: !Ref 'HostedZoneName'
+      HostedZoneName: !Join ['', [!Ref 'Subdomain', ., !Ref 'HostedZoneName']]
+      Comment: DNS name for my instance.
+      Name: !Join ['', [!Ref 'Subdomain', ., !Ref 'HostedZoneName']]
+      Type: A
+      TTL: '60'
+      ResourceRecords:
+      - !GetAtt EC2Instance.PublicIp

@@ -310,7 +310,7 @@ Resources:
               export AWS_BUCKET_NAME="${S3BucketName}.${envName}.rajat.me"
             EOF
             source /etc/profile
-            cd /home/ubuntu/webappDEV
+            cd /home/ec2-user/webservice
             rm -rf node_modules
             sudo npm i
             sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \

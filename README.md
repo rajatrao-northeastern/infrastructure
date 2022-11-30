@@ -45,3 +45,14 @@ export AWS_PROFILE=admin-dev or produser
 echo $AWS_PROFILE
 ```
 
+# Import SSL certificate to ACM 
+```bash
+aws acm import-certificate --certificate fileb://Certificate.pem
+--certificate-chain fileb://CertificateChain.pem
+--private-key fileb://PrivateKey.pem
+```
+
+# Command to create stack
+```bash
+aws cloudformation deploy --profile prodUser --template-file csye6225_infra_2.yaml  --parameter-overrides KeyName=prodKey ImageId=ami-0be5bf228a27b5c49 --stack-name teststack33 --region=us-east-1 --capabilities CAPABILITY_NAMED_IAM
+```
